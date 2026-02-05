@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+<div class="content" th:fragment="content">
+    <h1 style="margin-bottom: 20px; color: #2c3e50;" th:text="${title} + '一覧'">一覧</h1>
+
+    <div class="card">
+        <h2 th:text="${title} + 'を追加'">追加</h2>
+        <form th:action="@{/transaction/add}" method="post" class="form-row">
+            <input type="hidden" name="type" th:value="${type}">
+            <input type="number" name="amount" placeholder="金額" required>
+            <select name="categoryId" required>
+                <option value="">カテゴリを選択</option>
+                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+            </select>
+            <input type="date" name="date" th:value="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" required>
+            <input type="text" name="description" placeholder="説明（任意）" style="width: 200px;">
+            <button type="submit" class="btn btn-primary">追加</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>日付</th>
+                    <th>カテゴリ</th>
+                    <th>金額</th>
+                    <th>説明</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="t : ${transactions}">
+                    <td th:text="${t.transactionDate}"></td>
+                    <td th:text="${t.category?.name}"></td>
+                    <td th:classappend="${type == 'income'} ? 'text-green' : 'text-red'"
+                        th:text="'¥' + ${#numbers.formatInteger(t.amount, 1, 'COMMA')}"></td>
+                    <td th:text="${t.description}"></td>
+                    <td>
+                        <form th:action="@{/transaction/delete/{id}(id=${t.id})}" method="post" style="display:inline;">
+                            <input type="hidden" name="type" th:value="${type}">
+                            <button type="submit" class="btn btn-danger">削除</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(transactions)}">
+                    <td colspan="5" style="text-align: center; color: #999;">データがありません</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</html>

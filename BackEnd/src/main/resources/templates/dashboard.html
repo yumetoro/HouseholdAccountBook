@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+<div class="content" th:fragment="content">
+    <h1 style="margin-bottom: 20px; color: #2c3e50;" th:text="${year} + '年' + ${month} + '月の収支'">収支</h1>
+
+    <div class="summary-cards">
+        <div class="summary-card">
+            <div class="label">収入</div>
+            <div class="amount text-green" th:text="'¥' + ${#numbers.formatInteger(income, 1, 'COMMA')}">¥0</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">支出</div>
+            <div class="amount text-red" th:text="'¥' + ${#numbers.formatInteger(expense, 1, 'COMMA')}">¥0</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">残高</div>
+            <div class="amount" th:classappend="${balance >= 0} ? 'text-blue' : 'text-red'"
+                 th:text="'¥' + ${#numbers.formatInteger(balance, 1, 'COMMA')}">¥0</div>
+        </div>
+    </div>
+</div>
+</html>
