@@ -34,15 +34,43 @@
 - PostgreSQL
 - Gradle (またはGradle Wrapper使用)
 
-### 2. データベース設定
+### 2. PostgreSQLのインストール
 
-PostgreSQLで以下のデータベースを作成してください:
-
-```sql
-CREATE DATABASE household;
+#### Mac (Homebrew)
+```bash
+brew install postgresql@15
+brew services start postgresql@15
 ```
 
-### 3. 設定ファイル
+#### Windows
+1. [PostgreSQL公式サイト](https://www.postgresql.org/download/windows/)からインストーラーをダウンロード
+2. インストール時にパスワードを `postgres` に設定
+3. デフォルトポート `5432` のまま進める
+
+#### Ubuntu/Debian
+```bash
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+sudo systemctl start postgresql
+```
+
+### 3. データベース作成
+
+```bash
+# PostgreSQLに接続
+psql -U postgres
+
+# データベース作成
+CREATE DATABASE household;
+
+# 確認
+\l
+
+# 終了
+\q
+```
+
+### 4. 設定ファイル
 
 `BackEnd/src/main/resources/application.properties` を環境に合わせて編集:
 
@@ -51,6 +79,8 @@ spring.datasource.url=jdbc:postgresql://localhost:5432/household
 spring.datasource.username=postgres
 spring.datasource.password=postgres
 ```
+
+> **Note**: テーブルは `ddl-auto=update` により自動作成されます。手動でのテーブル作成は不要です。
 
 ### 4. 起動方法
 
